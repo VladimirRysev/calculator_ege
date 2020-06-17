@@ -1,0 +1,53 @@
+﻿@model Calculator_ege_bu.Models.Admin.Divisions.DivisionViewModel
+
+@{
+    var title = Model.Id == 0 ? "Добавление нового подразделения" : Model.Name;
+    ViewData["Title"] = title;
+}
+<nav aria-label="breadcrumb" class="mt-2">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="@Url.Action("Edit", "University", new { DivisionsPage = Model.Page, Id = Model.UniversityId})">@Model.UniversityName</a></li>
+        <li class="breadcrumb-item active" aria-current="pager">@title</li>
+    </ol>
+</nav>
+<h4>@title</h4>
+<hr />
+<div class="row">
+    <form class="w-100" action="@Url.Action("CreateOrUpdate", "Divisions")" method="post">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m=>m.UniversityId)
+        @Html.HiddenFor(m=>m.UniversityName)
+        @Html.HiddenFor(m=>m.Id)
+        @Html.HiddenFor(m=>m.Page)
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="col-md-8">@Html.EditorFor(m => m.Name)</div>
+            <div class="col-md-4">@Html.EditorFor(m => m.PageUrl)</div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a href="@Url.Action("Edit", "University", new { DivisionsPage = Model.Page, Id = Model.UniversityId})">Назад</a>
+        </div>
+    </form>
+</div>
+@if (Model.Directions != null)
+{
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex">
+            <h4>Образовательные направления</h4>
+            <div class="ml-auto">
+                <a class="btn btn-primary" href="@Url.Action("Create", "Directions", new { DivisionId = Model.Id, DivisionName = Model.Name, UniversityId = Model.UniversityId, Page = Model.DirectionPage, UniversityName = Model.UniversityName})"><i class="fas fa-plus mr-1"></i>Добавить</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="divisionsContainer">
+            @{await Html.RenderPartialAsync("../Directions/DirectionsListViewPartial", Model.Directions);}
+        </div>
+    </div>
+</div>
+}
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

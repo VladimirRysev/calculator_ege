@@ -1,0 +1,110 @@
+﻿@model Calculator_ege_bu.Models.Admin.Universities.UniversitiesListViewModel
+
+@{
+    ViewData["Title"] = "View";
+    var count = ViewBag.DirectionCount;
+}
+
+<h1>Университеты</h1>
+@if (count != null)
+{
+    <div class="alert alert-success" role="alert">
+        Добавлено/изменено @count записей!
+    </div>
+}
+<div class="card">
+    <div class="card-header">
+        <h6>Импорт из файла</h6>
+    </div>
+    <div class="card-body">
+       
+        <a class="btn btn-info mb-2" href="~/excel/Calculator.xlsx"><i class="fas fa-download mr-1"></i>Скачать шаблон для экспорта</a>
+        
+        <form action="@Url.Action("ImportData")" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <div class="custom-file">
+                    <input type="file" name="file" class="custom-file-input" id="customFile" accept=".xls, .xlsx">
+                    <label class="custom-file-label" for="customFile">Выберете файл</label>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-upload mr-1"></i>Отправить</button>
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+<div>
+    <div><a class="btn btn-primary" href="@Url.Action("Create")"><i class="fas fa-plus mr-1"></i>Добавить</a></div>
+
+</div>
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <span>Дата создания</span>
+            </th>
+            <th>
+                <span>Дата последнего изменения</span>
+            </th>
+            <th>
+                <span>Название университета</span>
+            </th>
+            <th>
+                <span>Краткое название университета</span>
+            </th>
+            <th>
+                <span>Основной цвет</span>
+            </th>
+            <th>
+                <span>Логотип университета</span>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Universities)
+        {
+            <tr>
+                <td>
+                    <span>@item.CreateDateTime.ToShortDateString()</span>
+                </td>
+                <td>
+                    <span>@item.ModifiedDateTime.ToShortDateString()</span>
+                </td>
+                <td>
+                    <span>@item.Name</span>
+                </td>
+                <td>
+                    <span>@item.ShortName</span>
+                </td>
+                <td>
+                    @{
+                        var colortext = "";
+                        var colorHead = "";
+                        if (!string.IsNullOrEmpty(item.Color))
+                        {
+                            colortext = "color:white!important";
+                            colorHead = item.Color.StartsWith('#') ? item.Color : $"#{item.Color}";
+                        }
+                     }
+                    <div style="background-color:@colorHead; color:@colortext">@item.Color</div>
+                </td>
+                <td>
+                    <img src="@item.Logo" style="max-height:150px; max-width:150px;"/>
+                </td>
+                <td>
+                    <div class="d-flex">
+                        <a class="btn btn-sm btn-primary mr-2" data-toggle="tooltip" title="Изменить" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa fa-pencil-alt"></i></a>
+                        <form action="@Url.Action("Delete", new { id = item.Id })" method="post">
+                            @Html.AntiForgeryToken()
+                            <button onclick="return confirm('Вы точно хотите удалить @item.Name?')" data-toggle="tooltip" title="Удалить" type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

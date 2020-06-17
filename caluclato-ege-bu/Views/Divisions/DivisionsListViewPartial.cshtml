@@ -1,0 +1,47 @@
+﻿@using Calculator_ege_bu.Models.Admin.Divisions
+@using Calculator_ege_bu.Extentions
+@using Calculator_ege_bu.Helpers
+
+@model DivisionsListViewModel
+
+@if (Model.Divisions?.Any() == true)
+{
+    @if (Model.Divisions.PageCount > 1)
+    {
+        Func<int, string> func = page => Url.Action("Edit", "University", new { DivisionsPage = page, Id = Model.UniversityId});
+        @Html.PagerCenter(Model.Divisions, func)
+    }
+    <table class="table">
+        <tr>
+            <th>Название</th>
+            <th>Дата создания</th>
+            <th>Дата последнего изменения</th>
+            <th>Ссылка на официальную страницу</th>
+            <th></th>
+        </tr>
+        <tbody>
+            @foreach (var item in Model.Divisions)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.CreateDateTime.ToShortDateTime()</td>
+                    <td>@item.ModifiedDateTime.ToShortDateTime()</td>
+                    <td>@item.PageUrl</td>
+                    <td>
+                        <div class="d-flex">
+                            <a href="@Url.Action("Edit", "Divisions", new { Id = item.Id, Page = Model.Page})" class="btn btn-primary btn-sm"><i class="fas fa-pencil-alt"></i></a>
+                            <form action="@Url.Action("Delete", "Divisions")" method="post">
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("Id", item.Id)
+                                <button type="submit" onclick="return confirm('Вы уверены что хотите удалить @item.Name?')" class="ml-md-2 btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}else
+{
+    <em>Пока нет ни одного подразделения.</em>
+}

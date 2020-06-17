@@ -1,0 +1,38 @@
+﻿@model DateTime?
+@{
+    var editorData = ViewData["editorData"] as string;
+    var DisplayName = ViewData.ModelMetadata.DisplayName;
+    if (ViewData.ModelMetadata.IsRequired)
+    {
+        DisplayName += "*";
+    }
+}
+<div class="form-group" id="form-group-@ViewData.ModelMetadata.PropertyName">
+    <div class="form-line">
+        <label asp-for="@ViewData.ModelMetadata.PropertyName" class="control-label">@DisplayName</label>
+        <div class="form-field">
+            @Html.TextBoxFor(
+                m => m,
+                new
+                {
+                    @class = "form-control datepicker",
+                    @Value = Model == null ? "" : Model.Value.ToShortDateString(),
+                    autocomplete = "off"
+                })
+
+            @if (!String.IsNullOrWhiteSpace(ViewData.ModelMetadata.Description))
+            {
+                <p class="help-block">
+                    @ViewData.ModelMetadata.Description
+                </p>
+            }
+        </div>
+    </div>
+    <div class="form-line">
+        <div class="form-error">
+            @Html.ValidationMessageFor(m => m, null, new { @class = "text-danger" })
+        </div>
+    </div>
+</div>
+
+

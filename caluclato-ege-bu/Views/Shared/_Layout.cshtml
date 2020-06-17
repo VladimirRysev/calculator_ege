@@ -1,0 +1,81 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] Calculator EGE</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/fontawesome-free-5.13.0-web/css/all.min.css" rel="stylesheet" />
+    <link href="~/lib/fontawesome-free-5.13.0-web/css/fontawesome.min.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        @if (IsSectionDefined("Header"))
+        {
+            @RenderSection("Header")
+        }
+        else
+        {
+        <nav class="navbar navbar-expand d-flex">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index", "Calculator")">Калькулятор</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index", "University", new { Page = 1 })">Админка</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index", "Subjects", new { Page = 1 })">Экзамены</a>
+                </li>
+            </ul>
+            @await Html.PartialAsync("_LoginPartial")
+        </nav>
+        }
+    </header>
+    @{
+
+        var errorMesage = TempData["ErrorMessage"] as string;
+        var succesMessage = TempData["SuccesMessage"] as string;
+    }
+    <div class="container p-4" style="max-width:1600px!important;">
+        <main role="main">
+           
+            @if (!string.IsNullOrEmpty(succesMessage))
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @succesMessage
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(errorMesage))
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @errorMesage
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/fontawesome-free-5.13.0-web/js/all.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+    <script>
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

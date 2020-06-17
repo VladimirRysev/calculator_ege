@@ -1,0 +1,46 @@
+﻿@model Calculator_ege_bu.Models.Admin.Subjects.SubjectsListViewModel
+
+@{
+    var title = "Экзамены";
+    ViewData["Title"] = title;
+}
+
+<h4>@title</h4>
+@if (Model.Subjects?.Any() == true)
+{
+    <table class="table">
+        <tr>
+            <th>Название</th>
+            <th></th>
+        </tr>
+        <tbody>
+            @foreach (var item in Model.Subjects)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>
+                        <div class="d-flex">
+                            @if (item.CanDelete)
+                            {
+                                <a href="@Url.Action("Edit", new { Id = item.Id})" class="btn btn-primary btn-sm"><i class="fas fa-pencil-alt"></i></a>
+                                <form action="@Url.Action("Delete")" method="post">
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("Id", item.Id)
+                                    <button type="submit" 
+                                            onclick="return confirm('При удалении предмета, он удалится из ВСЕХ образовательных направлений! Вы уверены что хотите удалить @item.Name?')" 
+                                            class="ml-md-2 btn btn-sm btn-danger">
+                                    <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <em>Пока нет ни одного подразделения.</em>
+}

@@ -1,2 +1,2 @@
-# calculator_ege
-калькулятор егэ
+# caluclato-ege-bu
+

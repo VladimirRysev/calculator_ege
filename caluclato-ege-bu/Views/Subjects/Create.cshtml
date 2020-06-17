@@ -1,0 +1,30 @@
+﻿@model Calculator_ege_bu.Models.Admin.Subjects.SubjectViewModel
+
+@{
+    var title = Model.Id == 0 ? "Добавление новый экзамен" : Model.Name;
+    ViewData["Title"] = title;
+}
+<nav aria-label="breadcrumb" class="mt-2">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="@Url.Action("Index")">Экзамены</a></li>
+        <li class="breadcrumb-item active" aria-current="pager">@title</li>
+    </ol>
+</nav>
+<h4>@title</h4>
+<hr />
+<div class="row">
+    <form class="w-100" action="@Url.Action("CreateOrUpdate")" method="post">
+        @Html.AntiForgeryToken()
+        <br/>
+        @Html.HiddenFor(m => m.Id)
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @Html.EditorFor(m => m.Name)
+        <div class="form-group mt-3">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a href="@Url.Action("Index")">Назад</a>
+        </div>
+    </form>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

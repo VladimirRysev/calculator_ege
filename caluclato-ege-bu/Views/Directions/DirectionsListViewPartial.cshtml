@@ -1,0 +1,58 @@
+﻿@using Calculator_ege_bu.Models.Admin.Directions
+@using Calculator_ege_bu.Extentions
+@using Calculator_ege_bu.Helpers
+
+@model DirectionsListViewModel
+
+@if (Model.Directions?.Any() == true)
+{
+    @if (Model.Directions.PageCount > 1)
+    {
+        Func<int, string> func = page => Url.Action("Edit", "Divisions", new { DirectionPage = page, Id = Model.Divisionid });
+        @Html.PagerCenter(Model.Directions, func)
+    }
+    <table class="table table-responsive">
+        <tr>
+            <th>Название</th>
+            <th>Код</th>
+            <th>Количество бюджетных мест</th>
+            <th>Количество платных мест</th>
+            <th>Период обучения(лет)</th>
+            <th>Форма обучения</th>
+            <th>Уровень образования</th>
+            <th>Стоимость обучения</th>
+            <th>Ссылка на официальную страницу</th>
+            <th></th>
+        </tr>
+        <tbody>
+            @foreach (var item in Model.Directions)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Code</td>
+                    <td>@item.BudgetPlacesCount</td>
+                    <td>@item.PaidPlacesCount</td>
+                    <td>@item.PeriodOfStudy</td>
+                    <td>@item.Form.GetDisplayName()</td>
+                    <td>@item.Level.GetDisplayName()</td>
+                    <td>@item.Price</td>
+                    <td>@item.PageUrl</td>
+                    <td>
+                        <div class="d-flex">
+                            <a href="@Url.Action("Edit", "Directions", new { Id = item.Id, Page = Model.Page})" class="btn btn-primary btn-sm"><i class="fas fa-pencil-alt"></i></a>
+                            <form action="@Url.Action("Delete", "Directions")" method="post">
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("Id", item.Id)
+                                <button type="submit" onclick="return confirm('Вы уверены что хотите удалить @item.Name?')" class="ml-md-2 btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <em>Пока нет ни одного направления.</em>
+}

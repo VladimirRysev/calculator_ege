@@ -1,0 +1,42 @@
+﻿@model Calculator_ege_bu.Models.Accaunt.UsersListViewModel
+
+@{
+    ViewData["Title"] = "Пользователи";
+}
+
+<h1>Пользователи</h1>
+
+<p>
+    <a class="btn btn-primary" href="@Url.Action("Create")"><i class="fas fa-plus mr-1"></i>Добавить</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>Логин</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Users)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>
+                    <div class="d-flex">
+                        <a href="@Url.Action("Edit", new { Id = item.Id})" class="btn btn-primary btn-sm"><i class="fas fa-pencil-alt"></i></a>
+                        @if (item.CanBeDeleted)
+                        {
+                            <form action="@Url.Action("Delete")" method="post">
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("Id", item.Id)
+                                <button type="submit" onclick="return confirm('Вы точно хотите удалить пользователя?')" class="ml-md-2 btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>
+                            </form>
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

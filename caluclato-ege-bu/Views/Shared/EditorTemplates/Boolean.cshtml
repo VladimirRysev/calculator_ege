@@ -1,0 +1,12 @@
+﻿@model bool
+@{
+    var htmlAttributes = new Dictionary<string, object>()
+    {
+        { "class", "custom-control-input"},
+        { "id", $"cheknox_{ViewData.ModelMetadata.PropertyName}"}
+    };
+}
+<div class="custom-control custom-checkbox">
+    @Html.CheckBoxFor(m => m, htmlAttributes)
+    <label class="custom-control-label" for="cheknox_@ViewData.ModelMetadata.PropertyName">@ViewData.ModelMetadata.DisplayName</label>
+</div>

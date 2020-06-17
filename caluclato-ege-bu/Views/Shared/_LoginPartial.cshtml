@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using DataAccessLayer.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+
+    <div class="ml-auto">
+        <div class="row">
+            @if (User.IsInRole(DataAccessLayer.Models.Enums.RoleEnum.SuperAdministrator.ToString()))
+            {
+                <div class="col"><a class="nav-link" href="@Url.Action("Index", "Accaunt", new { Page = 1 })">Пользователи</a></div>
+            }
+            <div class="col">
+                <h5>@User.Identity.Name</h5>
+            </div>
+        <div class="col">
+            <form action="@Url.Action("Logout", "Calculator")" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-secondary">Выход</button>
+            </form>
+        </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="ml-auto">
+        <a href="@Url.Action("Login", "Calculator")">Вход</a>
+    </div>
+}

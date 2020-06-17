@@ -1,0 +1,19 @@
+﻿@using DataAccessLayer.Models.Enums
+@using Calculator_ege_bu.Extentions
+@model RoleEnum
+@{
+
+}
+<label for="select_@ViewData.ModelMetadata.PropertyName">@ViewData.ModelMetadata.DisplayName</label>
+
+<select class="custom-select" name="@ViewData.ModelMetadata.PropertyName" id="select_@ViewData.ModelMetadata.PropertyName" required>
+    @foreach (RoleEnum item in Enum.GetValues(typeof(RoleEnum)))
+    {
+        var selected = item == Model ? "selected" : "";
+        <option @selected value="@item.ToString()">@item.GetDisplayName()</option>
+    }
+
+</select>
+<div class="invalid-feedback">
+    Выберете вариант
+</div>
